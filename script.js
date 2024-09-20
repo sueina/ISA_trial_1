@@ -4,7 +4,7 @@
 const barcodeData = {
     "9556623000022": { name: "baby powder", price: 14.50 },
     "9555430810053": { name: "nail lacquer", price: 22.75 },
-    "4891122334455": { name: "Cooking Oil", price: 8.00 },
+    "041130130534": { name: "suharlina", price: 20000.00 },
     "4899988776655": { name: "Granulated Sugar", price: 3.25 },
     "4895544332211": { name: "Teh Petaling", price: 5.00 },
     // Add more Malaysian items as needed
