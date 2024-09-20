@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barcode Shopping Cart</title>
     <link rel="stylesheet" href="style.css">
-    <!-- ZXing Browser Library -->
-    <script src="https://unpkg.com/@zxing/browser@0.0.10/umd/index.min.js"></script>
+    <!-- Html5 QR Code Library -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
     <header>
@@ -17,7 +17,7 @@
         <section id="scanner-section">
             <button id="start-scan">Start Scanning</button>
             <div id="scanner" class="hidden">
-                <video id="video" width="100%" height="300"></video>
+                <div id="reader" style="width: 100%; max-width: 600px;"></div>
                 <button id="stop-scan">Stop Scanning</button>
             </div>
         </section>
@@ -47,7 +47,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2024 Sueina FYP</p>
+        <p>&copy; 2024 sueina fyp</p>
     </footer>
 
     <script src="script.js"></script>
