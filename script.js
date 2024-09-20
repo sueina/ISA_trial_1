@@ -2,7 +2,7 @@
 
 // Sample Malaysian barcode to price mapping (EAN-13)
 const barcodeData = {
-    "9556623000022": { name: "baby powder", price: 15.99 },
+    "9556623000022": { name: "baby powder", price: 14.50 },
     "9555430810053": { name: "nail lacquer", price: 22.75 },
     "4891122334455": { name: "Cooking Oil", price: 8.00 },
     "4899988776655": { name: "Granulated Sugar", price: 3.25 },
@@ -16,57 +16,49 @@ let cart = [];
 const startScanBtn = document.getElementById('start-scan');
 const stopScanBtn = document.getElementById('stop-scan');
 const scanner = document.getElementById('scanner');
-const video = document.getElementById('video');
+const readerDiv = document.getElementById('reader');
 const barcodeInput = document.getElementById('barcode-input');
 const addBarcodeBtn = document.getElementById('add-barcode');
 const cartItems = document.getElementById('cart-items');
 const totalElement = document.getElementById('total');
 
-// Initialize Quagga
+let html5QrCode; // Html5 QR Code instance
+
+// Initialize Html5 QR Code
 function startScanner() {
     scanner.classList.remove('hidden');
-    Quagga.init({
-        inputStream: {
-            type: "LiveStream",
-            constraints: {
-                facingMode: "environment" // Use back camera
-            },
-            target: video // Or '#yourElement' (optional)
-        },
-        decoder: {
-            readers: ["ean_reader", "ean_8_reader", "code_128_reader"]
-        },
-        locate: true // Better localization
-    }, function(err) {
-        if (err) {
-            console.error("Quagga initialization error:", err);
-            alert("Error starting scanner. Please try again.");
-            scanner.classList.add('hidden');
-            return;
-        }
-        Quagga.start();
-        console.log("Quagga started successfully.");
-    });
+    html5QrCode = new Html5Qrcode("reader");
+    const config = { fps: 10, qrbox: 250 };
 
-    Quagga.onDetected(onDetected);
+    html5QrCode.start(
+        { facingMode: "environment" },
+        config,
+        (decodedText, decodedResult) => {
+            console.log(`Barcode detected: ${decodedText}`, decodedResult);
+            alert(`Barcode detected: ${decodedText}`);
+            addItem(decodedText);
+            stopScanner();
+        },
+        (errorMessage) => {
+            // Scan error, ignore it.
+            console.warn(`Scan error: ${errorMessage}`);
+        }
+    ).catch((err) => {
+        console.error("Unable to start scanning:", err);
+        alert("Unable to start scanning. Please try again.");
+    });
 }
 
 function stopScanner() {
-    Quagga.offDetected(onDetected);
-    Quagga.stop();
+    if (html5QrCode) {
+        html5QrCode.stop().then(() => {
+            html5QrCode.clear();
+            console.log("Html5 QR Code scanner stopped.");
+        }).catch((err) => {
+            console.error("Error stopping scanner:", err);
+        });
+    }
     scanner.classList.add('hidden');
-    console.log("Quagga stopped.");
-}
-
-function onDetected(result) {
-    const code = result.codeResult.code;
-    console.log("Barcode detected:", code);
-
-    // Prevent multiple detections
-    Quagga.offDetected(onDetected);
-    alert(`Barcode detected: ${code}`);
-    addItem(code);
-    stopScanner();
 }
 
 // Add item to cart
@@ -115,13 +107,13 @@ function renderCart() {
 
 // Event Listeners
 startScanBtn.addEventListener('click', () => {
-    // Request camera permission
+    // Request camera permission and start scanner
     navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-        .then(stream => {
+        .then((stream) => {
             console.log("Camera permission granted.");
             startScanner();
         })
-        .catch(err => {
+        .catch((err) => {
             console.error("Camera permission denied or error:", err);
             alert("Camera permission denied or cannot be accessed.");
         });
