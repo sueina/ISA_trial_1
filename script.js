@@ -5,7 +5,7 @@ const barcodeData = {
     "9556623000022": { name: "baby powder", price: 14.50 },
     "9555430810053": { name: "nail lacquer", price: 22.75 },
     "8887603539364": { name: "guardian clear assorted plasters", price: 3.70 },
-    "4899988776655": { name: "Granulated Sugar", price: 3.25 },
+    "9556126667852": { name: "Vaseline Aloe soothing jelly", price: 11.90 },
     "4895544332211": { name: "Teh Petaling", price: 5.00 },
     // Add more Malaysian items as needed
 };
